@@ -38,7 +38,7 @@
         visualizerContainer.appendChild(bar);
 
     }
-}
+})();
 
 // Make the DIV element draggable:
 dragElement(document.getElementById("mydiv"));
