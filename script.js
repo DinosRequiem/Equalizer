@@ -38,7 +38,46 @@
         visualizerContainer.appendChild(bar);
 
     }
+
+
+// This function has the task to adjust the bar heights according to the frequency data
+function renderFrame() {
+
+    // Update our frequency data array with the latest frequency data
+    analayzer.getByteFrequencyData(frequencyData);
+
+    for( let i = 0; i < NBR_OF_BARS; i++ ) {
+
+        // Since the frequency data array is 1024 in length, we don't want to fetch
+        // the first NBR_OF_BARS of values, but try and grab frequencies over the whole spectrum
+        const index = (i + 10) * 2;
+        // fd is a frequency value between 0 and 255
+        const fd = frequencyData[index];
+
+        // Fetch the bar DIV element
+        const bar = document.querySelector("#bar" + i);
+        if( !bar ) {
+            continue;
+        }
+
+        // If fd is undefined, default to 0, then make sure fd is at least 4
+        // This will make make a quiet frequency at least 4px high for visual effects
+        const barHeight = Math.max(4, fd || 0);
+        bar.style.height = barHeight + "px";
+
+    }
+
+    // At the next animation frame, call ourselves
+    window.requestAnimationFrame(renderFrame);
+
+}
+
+renderFrame();
+
+audio.volume = 0.10;
+audio.play();
 })();
+
 
 // Make the DIV element draggable:
 dragElement(document.getElementById("mydiv"));
