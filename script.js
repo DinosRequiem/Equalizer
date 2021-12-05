@@ -5,10 +5,11 @@ const audio = document.querySelector("audio");
 (function() {
 
 audio.play;
-    
+
 
 })();
 
+// Make the DIV element draggable:
 dragElement(document.getElementById("mydiv"));
 
 function dragElement(elmnt) {

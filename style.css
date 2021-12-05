@@ -4,14 +4,16 @@ html {
 }
 
 #mydiv {
-    position: absolute;
-    z-index: 9;
-    background: none;
-    text-align: center;
-  }
-  
-  #mydivheader {
-    cursor: move;
-    z-index: 10;
-    background: none ;
-  }
+  position: absolute;
+  z-index: 9;
+  background-color: none;
+  text-align: center;
+}
+
+#mydivheader {
+  border-left:solid 8px white;
+  cursor: move;
+  z-index: 10;
+  background-color: none;
+  color: #fff;
+}
