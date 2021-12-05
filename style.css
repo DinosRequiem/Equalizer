@@ -3,17 +3,26 @@ html {
     background-size:cover;
 }
 
-#mydiv {
-  position: absolute;
-  z-index: 9;
-  background-color: none;
-  text-align: center;
-}
-
-#mydivheader {
-  border-left:solid 8px white;
-  cursor: move;
-  z-index: 10;
-  background-color: none;
-  color: #fff;
-}
+/* choose file button*/
+#thefile {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+  }
+  /*background box*/
+  #canvas {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 80%;
+    background-color: none;
+  }
+  /*audio bar*/
+  audio {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    width: calc(100% - 20px);
+  }

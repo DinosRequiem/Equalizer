@@ -1,54 +1,65 @@
-"use strict";
 
-const audio = document.querySelector("audio");
-
-(function() {
-
-audio.play;
-
-
-})();
-
-// Make the DIV element draggable:
-dragElement(document.getElementById("mydiv"));
-
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "header")) {
-    // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
+window.onload = function() {
+  
+    var file = document.getElementById("thefile");
+    var audio = document.getElementById("audio");
+    
+    file.onchange = function() {
+      var files = this.files;
+      audio.src = URL.createObjectURL(files[0]);
+      audio.load();
+      audio.play();
+      var context = new AudioContext();
+      var src = context.createMediaElementSource(audio);
+      var analyser = context.createAnalyser();
+  
+      var canvas = document.getElementById("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      var ctx = canvas.getContext("2d");
+  
+      src.connect(analyser);
+      analyser.connect(context.destination);
+  
+      analyser.fftSize = 256;
+  
+      var bufferLength = analyser.frequencyBinCount;
+      console.log(bufferLength);
+  
+      var dataArray = new Uint8Array(bufferLength);
+  
+      var WIDTH = canvas.width;
+      var HEIGHT = canvas.height;
+  
+      var barWidth = (WIDTH / bufferLength) * 2.5;
+      var barHeight;
+      var x = 0;
+  
+      function renderFrame() {
+        requestAnimationFrame(renderFrame);
+  
+        x = 0;
+  
+        analyser.getByteFrequencyData(dataArray);
+  
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  
+        for (var i = 0; i < bufferLength; i++) {
+          barHeight = (3 * dataArray[i]);
+          
+          var r = barHeight + (5 * (i/bufferLength));
+          var g = 200 * (i/bufferLength);
+          var b = 1000 * (i/bufferLength);
+  
+          ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+          ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+  
+          x += barWidth + 1;
+        }
+      }
+  
+      audio.play();
+      renderFrame();
+    };
+  };
