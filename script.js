@@ -1,13 +1,44 @@
 "use strict";
 
-const audio = document.querySelector("audio");
+(function () {
 
-(function() {
+    // The number of bars that should be displayed
+    const NBR_OF_BARS = 50;
 
-audio.play;
+    // Get the audio element tag
+    const audio = document.querySelector("audio");
 
+    // Create an audio context
+    const ctx = new AudioContext();
 
-})();
+    // Create an audio source
+    const audioSource = ctx.createMediaElementSource(audio);
+
+    // Create an audio analyzer
+    const analayzer = ctx.createAnalyser();
+
+    // Connect the source, to the analyzer, and then back the the context's destination
+    audioSource.connect(analayzer);
+    audioSource.connect(ctx.destination);
+
+    // Print the analyze frequencies
+    const frequencyData = new Uint8Array(analayzer.frequencyBinCount);
+    analayzer.getByteFrequencyData(frequencyData);
+    console.log("frequencyData", frequencyData);
+
+    // Get the visualizer container
+    const visualizerContainer = document.querySelector(".visualizer-container");
+
+    // Create a set of pre-defined bars
+    for( let i = 0; i < NBR_OF_BARS; i++ ) {
+
+        const bar = document.createElement("DIV");
+        bar.setAttribute("id", "bar" + i);
+        bar.setAttribute("class", "visualizer-container__bar");
+        visualizerContainer.appendChild(bar);
+
+    }
+}
 
 // Make the DIV element draggable:
 dragElement(document.getElementById("mydiv"));
